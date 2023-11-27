@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize';
 
 
 import db from "../db/connection";
+import Account from './account';
 
 const Budget = db.define( 'Budget', {
     budget_id: {
@@ -21,5 +22,7 @@ const Budget = db.define( 'Budget', {
         type: DataTypes.DATEONLY
     }
 });
+
+Budget.hasMany(Account, { foreignKey: 'budget_id' });
 
 export default Budget;

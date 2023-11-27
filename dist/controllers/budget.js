@@ -15,18 +15,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBudget = exports.putBudget = exports.postBudget = exports.getBudget = exports.getBudgets = void 0;
 const uuid_1 = require("uuid");
 const budget_1 = __importDefault(require("../models/budget"));
+const utility_1 = require("../utilities/utility");
+const utility = new utility_1.Utility();
 const getBudgets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send({ msg: 'getBudgets method' });
+    try {
+        const budgets = yield budget_1.default.findAll();
+        res.json(budgets);
+    }
+    catch (error) {
+        utility.errorMessage(error, 'getBudgets()');
+        res.status(500).send({ msg: 'Server error' });
+    }
 });
 exports.getBudgets = getBudgets;
 const getBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
         const budget = yield budget_1.default.findByPk(id);
-        res.json(budget);
+        return (budget) ? res.json(budget) : res.status(404).send({ msg: 'The record does not exist' });
     }
     catch (error) {
-        console.log('Error getBudget(): ' + error);
+        utility.errorMessage(error, 'getBudget()');
         res.status(500).send({ msg: 'Server error' });
     }
 });
@@ -40,25 +49,46 @@ const postBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.json(budget);
     }
     catch (error) {
-        console.log('Error postBudget(): ' + error);
-        res.status(500).send({
-            msg: 'Server error'
-        });
+        utility.errorMessage(error, 'postBudget()');
+        res.status(500).send({ msg: 'Server error' });
     }
 });
 exports.postBudget = postBudget;
 const putBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { body } = req;
-    res.send({ msg: 'putBudget method', id, body });
+    try {
+        const budget = yield budget_1.default.findByPk(id);
+        if (budget) {
+            yield budget.update(body);
+            res.json(budget);
+        }
+        else {
+            res.status(404).send({ msg: 'The record does not exist' });
+        }
+    }
+    catch (error) {
+        utility.errorMessage(error, 'putBudget()');
+        res.status(500).send({ msg: 'Server error' });
+    }
 });
 exports.putBudget = putBudget;
-const deleteBudget = (req, res) => {
+const deleteBudget = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    res.json({
-        msg: 'deleteBudget method',
-        id
-    });
-};
+    try {
+        const budget = yield budget_1.default.findByPk(id);
+        if (budget) {
+            yield budget.destroy();
+            res.status(200).send({ msg: 'Record deleted successfully' });
+        }
+        else {
+            res.status(404).send({ msg: 'The record does not exist' });
+        }
+    }
+    catch (error) {
+        utility.errorMessage(error, 'deleteBudget()');
+        res.status(500).send({ msg: 'Server error' });
+    }
+});
 exports.deleteBudget = deleteBudget;
 //# sourceMappingURL=budget.js.map

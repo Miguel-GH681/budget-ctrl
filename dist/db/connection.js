@@ -4,6 +4,11 @@ const sequelize_1 = require("sequelize");
 const db = new sequelize_1.Sequelize('BudgetCtrlDB', 'sa', 'Admin12345', {
     host: 'localhost',
     dialect: 'mssql',
+    dialectOptions: {
+        options: {
+            useUTC: false
+        }
+    },
     define: {
         timestamps: false,
         freezeTableName: true

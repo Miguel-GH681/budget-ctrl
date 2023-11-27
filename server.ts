@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 
 import budgetRoutes from './routes/budget';
+import accountRoutes from './routes/account';
 import db from './db/connection';
 
 export class Server{
@@ -9,7 +10,8 @@ export class Server{
     private app : Application;
     private port : String;
     private paths = {
-        budgets : '/api/budgets/'
+        budgets : '/api/budgets/',
+        accounts : '/api/accounts/'
     }
 
     constructor(){
@@ -34,6 +36,7 @@ export class Server{
 
     routes(){
         this.app.use( this.paths.budgets, budgetRoutes);
+        this.app.use( this.paths.accounts, accountRoutes);
     }
 
     async dbConnection(){
