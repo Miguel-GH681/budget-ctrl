@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 
 import db from "../db/connection";
+import Movement from './movement';
 
 const Account = db.define( 'Account', {
     account_id: {
@@ -24,5 +25,7 @@ const Account = db.define( 'Account', {
         type: DataTypes.UUIDV4,
     }
 });
+
+Account.hasMany(Movement, { foreignKey: 'payment_method_id' });
 
 export default Account;

@@ -17,12 +17,16 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const budget_1 = __importDefault(require("./routes/budget"));
 const account_1 = __importDefault(require("./routes/account"));
+const payment_method_1 = __importDefault(require("./routes/payment_method"));
+const movement_1 = __importDefault(require("./routes/movement"));
 const connection_1 = __importDefault(require("./db/connection"));
 class Server {
     constructor() {
         this.paths = {
             budgets: '/api/budgets/',
-            accounts: '/api/accounts/'
+            accounts: '/api/accounts/',
+            payment_methods: '/api/payment-methods/',
+            movements: '/api/movements/'
         };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '8090';
@@ -42,6 +46,8 @@ class Server {
     routes() {
         this.app.use(this.paths.budgets, budget_1.default);
         this.app.use(this.paths.accounts, account_1.default);
+        this.app.use(this.paths.payment_methods, payment_method_1.default);
+        this.app.use(this.paths.movements, movement_1.default);
     }
     dbConnection() {
         return __awaiter(this, void 0, void 0, function* () {

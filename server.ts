@@ -3,6 +3,8 @@ import cors from 'cors';
 
 import budgetRoutes from './routes/budget';
 import accountRoutes from './routes/account';
+import paymentMethodRoutes from './routes/payment_method';
+import movementRoutes from './routes/movement';
 import db from './db/connection';
 
 export class Server{
@@ -11,7 +13,9 @@ export class Server{
     private port : String;
     private paths = {
         budgets : '/api/budgets/',
-        accounts : '/api/accounts/'
+        accounts : '/api/accounts/',
+        payment_methods : '/api/payment-methods/',
+        movements: '/api/movements/'
     }
 
     constructor(){
@@ -37,6 +41,8 @@ export class Server{
     routes(){
         this.app.use( this.paths.budgets, budgetRoutes);
         this.app.use( this.paths.accounts, accountRoutes);
+        this.app.use( this.paths.payment_methods, paymentMethodRoutes);
+        this.app.use( this.paths.movements, movementRoutes );
     }
 
     async dbConnection(){

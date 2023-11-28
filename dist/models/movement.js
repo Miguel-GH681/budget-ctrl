@@ -5,29 +5,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../db/connection"));
-const movement_1 = __importDefault(require("./movement"));
-const Account = connection_1.default.define('Account', {
-    account_id: {
+const Movement = connection_1.default.define('Movement', {
+    movement_id: {
         type: sequelize_1.DataTypes.UUIDV4,
         primaryKey: true,
     },
     name: {
-        type: sequelize_1.DataTypes.STRING,
-        unique: true
+        type: sequelize_1.DataTypes.STRING
+    },
+    observation: {
+        type: sequelize_1.DataTypes.STRING
     },
     amount: {
         type: sequelize_1.DataTypes.DECIMAL(7, 2)
     },
-    classification: {
-        type: sequelize_1.DataTypes.CHAR(1)
+    movement_date: {
+        type: sequelize_1.DataTypes.DATEONLY
     },
-    is_variable: {
-        type: sequelize_1.DataTypes.BOOLEAN
+    account_id: {
+        type: sequelize_1.DataTypes.UUIDV4,
     },
-    budget_id: {
+    payment_method_id: {
         type: sequelize_1.DataTypes.UUIDV4,
     }
 });
-Account.hasMany(movement_1.default, { foreignKey: 'payment_method_id' });
-exports.default = Account;
-//# sourceMappingURL=account.js.map
+exports.default = Movement;
+//# sourceMappingURL=movement.js.map
