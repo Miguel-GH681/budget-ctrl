@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
+import { QueryTypes } from "sequelize";
 
 import { Utility } from "../utilities/utility";
 import Movement from "../models/movement";
 import PaymentMethod from "../models/payment_method";
 import Account from "../models/account";
+import db from "../db/connection";
 
 const utility = new Utility();
 
 export const getMovements = async ( req : Request, res : Response )=>{
     try {
-        const movements = await Movement.findAll();
+        const movements = await db.query('EXEC SP_GetMovementData', { type: QueryTypes.SELECT });
         res.json( movements );
     } catch (error) {
         utility.errorMessage( error, 'getMovements()' );

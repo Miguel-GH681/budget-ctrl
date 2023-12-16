@@ -17,15 +17,9 @@ const Account = db.define( 'Account', {
     },
     classification: {
         type: DataTypes.CHAR(1)
-    },
-    is_variable: {
-        type: DataTypes.BOOLEAN
-    },
-    budget_id: {
-        type: DataTypes.UUIDV4,
     }
 });
 
-Account.hasMany(Movement, { foreignKey: 'payment_method_id' });
+Account.hasMany(Movement, { foreignKey: 'account_id' });
 
 export default Account;

@@ -14,13 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAccount = exports.putAccount = exports.postAccount = exports.getAccount = exports.getAccounts = void 0;
 const uuid_1 = require("uuid");
+const sequelize_1 = require("sequelize");
 const account_1 = __importDefault(require("../models/account"));
 const budget_1 = __importDefault(require("../models/budget"));
 const utility_1 = require("../utilities/utility");
+const movement_1 = __importDefault(require("../models/movement"));
+const connection_1 = __importDefault(require("../db/connection"));
 const utility = new utility_1.Utility();
 const getAccounts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const accounts = yield account_1.default.findAll();
+        const accounts = yield connection_1.default.query('EXEC SP_GetAccountData', { type: sequelize_1.QueryTypes.SELECT });
         res.json(accounts);
     }
     catch (error) {
@@ -32,7 +35,7 @@ exports.getAccounts = getAccounts;
 const getAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const account = yield account_1.default.findByPk(id);
+        const account = yield account_1.default.findByPk(id, { include: movement_1.default });
         res.json(account);
     }
     catch (error) {
@@ -45,12 +48,8 @@ const postAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const { body } = req;
     try {
         const name = yield account_1.default.findOne({ where: { name: body.name } });
-        const budget_id = yield budget_1.default.findOne({ where: { budget_id: body.budget_id } });
         if (name) {
             return res.status(400).send({ msg: 'The name field must be unique' });
-        }
-        if (!budget_id) {
-            return res.status(400).send({ msg: 'The id does not exist' });
         }
         body.account_id = (0, uuid_1.v4)();
         const account = account_1.default.build(body);
@@ -105,4 +104,5 @@ const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteAccount = deleteAccount;
+//Crear lógica para deudas
 //# sourceMappingURL=account.js.map

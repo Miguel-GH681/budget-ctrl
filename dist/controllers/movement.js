@@ -14,14 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMovement = exports.postMovement = exports.getMovement = exports.getMovements = void 0;
 const uuid_1 = require("uuid");
+const sequelize_1 = require("sequelize");
 const utility_1 = require("../utilities/utility");
 const movement_1 = __importDefault(require("../models/movement"));
 const payment_method_1 = __importDefault(require("../models/payment_method"));
 const account_1 = __importDefault(require("../models/account"));
+const connection_1 = __importDefault(require("../db/connection"));
 const utility = new utility_1.Utility();
 const getMovements = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const movements = yield movement_1.default.findAll();
+        const movements = yield connection_1.default.query('EXEC SP_GetMovementData', { type: sequelize_1.QueryTypes.SELECT });
         res.json(movements);
     }
     catch (error) {

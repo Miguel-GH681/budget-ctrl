@@ -23,6 +23,4 @@ const Budget = db.define( 'Budget', {
     }
 });
 
-Budget.hasMany(Account, { foreignKey: 'budget_id' });
-
 export default Budget;

@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
+import { QueryTypes } from "sequelize";
 
 import Account from "../models/account";
 import Budget from "../models/budget";
 import { Utility } from "../utilities/utility";
+import Movement from "../models/movement";
+import db from "../db/connection";
 
 const utility = new Utility();
 
-
 export const getAccounts = async ( req : Request, res : Response )=>{
     try {
-        const accounts = await Account.findAll();
+        const accounts = await db.query('EXEC SP_GetAccountData', { type: QueryTypes.SELECT });
         res.json( accounts );
     } catch (error) {
         utility.errorMessage( error, 'getAccounts()' );
@@ -23,7 +25,7 @@ export const getAccount = async ( req : Request, res : Response )=>{
     const { id } = req.params;
     
     try {
-        const account = await Account.findByPk( id );
+        const account = await Account.findByPk( id, { include: Movement } );
         res.json( account );
     } catch (error) {
         utility.errorMessage( error, 'getAccount()' );
@@ -37,13 +39,9 @@ export const postAccount = async ( req : Request, res : Response )=>{
 
     try{
         const name = await Account.findOne({ where: { name: body.name } });
-        const budget_id = await Budget.findOne({ where: { budget_id: body.budget_id } });
 
         if( name ){
             return res.status(400).send({msg: 'The name field must be unique'});
-        }
-        if( !budget_id ){
-            return res.status(400).send({msg: 'The id does not exist'});
         }
 
         body.account_id = uuidv4();
@@ -101,3 +99,5 @@ export const deleteAccount = async ( req : Request, res : Response )=>{
         res.status(500).send({ msg: 'Server error' });
     }
 }
+
+//Crear lógica para deudas

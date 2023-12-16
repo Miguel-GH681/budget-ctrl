@@ -20,14 +20,8 @@ const Account = connection_1.default.define('Account', {
     },
     classification: {
         type: sequelize_1.DataTypes.CHAR(1)
-    },
-    is_variable: {
-        type: sequelize_1.DataTypes.BOOLEAN
-    },
-    budget_id: {
-        type: sequelize_1.DataTypes.UUIDV4,
     }
 });
-Account.hasMany(movement_1.default, { foreignKey: 'payment_method_id' });
+Account.hasMany(movement_1.default, { foreignKey: 'account_id' });
 exports.default = Account;
 //# sourceMappingURL=account.js.map
