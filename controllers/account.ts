@@ -20,6 +20,16 @@ export const getAccounts = async ( req : Request, res : Response )=>{
     }
 }
 
+export const getAccountDataToForm = async ( req : Request, res : Response )=>{
+    try {
+        const accounts = await Account.findAll({ attributes:[['account_id', 'option_value'], 'name'] });
+        res.json( accounts );
+    } catch (error) {
+        utility.errorMessage( error, 'getAccountDataToForm()' );
+        res.status(500).send({ msg: 'Server error' });
+    }
+}
+
 export const getAccount = async ( req : Request, res : Response )=>{
 
     const { id } = req.params;

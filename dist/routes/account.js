@@ -4,6 +4,7 @@ const express_1 = require("express");
 const account_1 = require("../controllers/account");
 const router = (0, express_1.Router)();
 router.get('/', account_1.getAccounts);
+router.get('/form', account_1.getAccountDataToForm);
 router.get('/:id', account_1.getAccount);
 router.post('/', account_1.postAccount);
 router.put('/:id', account_1.putAccount);

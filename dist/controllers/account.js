@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAccount = exports.putAccount = exports.postAccount = exports.getAccount = exports.getAccounts = void 0;
+exports.deleteAccount = exports.putAccount = exports.postAccount = exports.getAccount = exports.getAccountDataToForm = exports.getAccounts = void 0;
 const uuid_1 = require("uuid");
 const sequelize_1 = require("sequelize");
 const account_1 = __importDefault(require("../models/account"));
@@ -32,6 +32,17 @@ const getAccounts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getAccounts = getAccounts;
+const getAccountDataToForm = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const accounts = yield account_1.default.findAll({ attributes: [['account_id', 'option_value'], 'name'] });
+        res.json(accounts);
+    }
+    catch (error) {
+        utility.errorMessage(error, 'getAccountDataToForm()');
+        res.status(500).send({ msg: 'Server error' });
+    }
+});
+exports.getAccountDataToForm = getAccountDataToForm;
 const getAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {

@@ -16,6 +16,16 @@ export const getMethods = async ( req : Request, res : Response )=>{
     }
 }
 
+export const getMethodDataToForm = async ( req : Request, res : Response )=>{
+    try {
+        const methods = await PaymentMethod.findAll({ attributes:[['payment_method_id', 'option_value'], 'name'] });
+        res.json( methods );
+    } catch (error) {
+        utility.errorMessage( error, 'getMethodDataToForm()' );
+        res.status(500).send({ msg: 'Server error' });
+    }
+}
+
 export const getMethod = async ( req : Request, res : Response )=>{
 
     const { id } = req.params;

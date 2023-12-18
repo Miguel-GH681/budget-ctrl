@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMethod = exports.putMethod = exports.postMethod = exports.getMethod = exports.getMethods = void 0;
+exports.deleteMethod = exports.putMethod = exports.postMethod = exports.getMethod = exports.getMethodDataToForm = exports.getMethods = void 0;
 const uuid_1 = require("uuid");
 const utility_1 = require("../utilities/utility");
 const payment_method_1 = __importDefault(require("../models/payment_method"));
@@ -28,6 +28,17 @@ const getMethods = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getMethods = getMethods;
+const getMethodDataToForm = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const methods = yield payment_method_1.default.findAll({ attributes: [['payment_method_id', 'option_value'], 'name'] });
+        res.json(methods);
+    }
+    catch (error) {
+        utility.errorMessage(error, 'getMethodDataToForm()');
+        res.status(500).send({ msg: 'Server error' });
+    }
+});
+exports.getMethodDataToForm = getMethodDataToForm;
 const getMethod = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
