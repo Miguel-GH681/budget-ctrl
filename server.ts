@@ -5,6 +5,8 @@ import budgetRoutes from './routes/budget';
 import accountRoutes from './routes/account';
 import paymentMethodRoutes from './routes/payment_method';
 import movementRoutes from './routes/movement';
+import bankRoutes from './routes/bank';
+import bankAccountRountes from './routes/bank_account';
 import db from './db/connection';
 
 export class Server{
@@ -15,7 +17,9 @@ export class Server{
         budgets : '/api/budgets/',
         accounts : '/api/accounts/',
         payment_methods : '/api/payment-methods/',
-        movements: '/api/movements/'
+        movements: '/api/movements/',
+        banks: '/api/banks/',
+        bank_account: '/api/bank-accounts/'
     }
 
     constructor(){
@@ -43,6 +47,8 @@ export class Server{
         this.app.use( this.paths.accounts, accountRoutes);
         this.app.use( this.paths.payment_methods, paymentMethodRoutes);
         this.app.use( this.paths.movements, movementRoutes );
+        this.app.use( this.paths.banks, bankRoutes );
+        this.app.use( this.paths.bank_account, bankAccountRountes );
     }
 
     async dbConnection(){

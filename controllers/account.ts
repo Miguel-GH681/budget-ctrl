@@ -4,8 +4,9 @@ import { QueryTypes } from "sequelize";
 
 import Account from "../models/account";
 import Budget from "../models/budget";
-import { Utility } from "../utilities/utility";
 import Movement from "../models/movement";
+
+import { Utility } from "../utilities/utility";
 import db from "../db/connection";
 
 const utility = new Utility();
@@ -36,6 +37,11 @@ export const getAccount = async ( req : Request, res : Response )=>{
     
     try {
         const account = await Account.findByPk( id, { include: Movement } );
+
+        if(!account){
+            return res.status(404).send({msg: 'The record does not exist'});            
+        }
+
         res.json( account );
     } catch (error) {
         utility.errorMessage( error, 'getAccount()' );
@@ -71,16 +77,12 @@ export const putAccount = async ( req : Request, res : Response ) => {
 
     try {
         const account = await Account.findByPk( id );
-        const budget_id = await Budget.findOne({ where: { budget_id: body.budget_id } });
 
         if ( !account ) {
             return res.status(404).send({msg: 'The record does not exist'});            
         }
         if( body.name == account.dataValues.name ){
             return res.status(400).send({msg: 'The name field must be unique'});
-        }
-        if( !budget_id ){
-            return res.status(400).send({msg: 'The id does not exist'});
         }
 
         await account.update( body );
@@ -109,5 +111,3 @@ export const deleteAccount = async ( req : Request, res : Response )=>{
         res.status(500).send({ msg: 'Server error' });
     }
 }
-
-//Crear lógica para deudas

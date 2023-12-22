@@ -13,7 +13,10 @@ const PaymentMethod = db.define( 'PaymentMethod', {
     },
     description: {
         type: DataTypes.STRING
-    }
+    },
+    bank_account_id: {
+        type: DataTypes.UUIDV4,
+    },
 });
 
 PaymentMethod.hasMany(Movement, { foreignKey: 'payment_method_id' });

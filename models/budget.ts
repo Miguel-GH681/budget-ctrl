@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-
 import db from "../db/connection";
-import Account from './account';
 
 const Budget = db.define( 'Budget', {
     budget_id: {

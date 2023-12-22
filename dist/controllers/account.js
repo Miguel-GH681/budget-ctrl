@@ -16,9 +16,8 @@ exports.deleteAccount = exports.putAccount = exports.postAccount = exports.getAc
 const uuid_1 = require("uuid");
 const sequelize_1 = require("sequelize");
 const account_1 = __importDefault(require("../models/account"));
-const budget_1 = __importDefault(require("../models/budget"));
-const utility_1 = require("../utilities/utility");
 const movement_1 = __importDefault(require("../models/movement"));
+const utility_1 = require("../utilities/utility");
 const connection_1 = __importDefault(require("../db/connection"));
 const utility = new utility_1.Utility();
 const getAccounts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -47,6 +46,9 @@ const getAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { id } = req.params;
     try {
         const account = yield account_1.default.findByPk(id, { include: movement_1.default });
+        if (!account) {
+            return res.status(404).send({ msg: 'The record does not exist' });
+        }
         res.json(account);
     }
     catch (error) {
@@ -78,15 +80,11 @@ const putAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { body } = req;
     try {
         const account = yield account_1.default.findByPk(id);
-        const budget_id = yield budget_1.default.findOne({ where: { budget_id: body.budget_id } });
         if (!account) {
             return res.status(404).send({ msg: 'The record does not exist' });
         }
         if (body.name == account.dataValues.name) {
             return res.status(400).send({ msg: 'The name field must be unique' });
-        }
-        if (!budget_id) {
-            return res.status(400).send({ msg: 'The id does not exist' });
         }
         yield account.update(body);
         res.json(account);
@@ -115,5 +113,4 @@ const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteAccount = deleteAccount;
-//Crear lógica para deudas
 //# sourceMappingURL=account.js.map
